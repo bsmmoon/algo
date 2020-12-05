@@ -37,25 +37,27 @@ var threeSum = function(nums) {
     }
   })
 
-  let sum, has, tuple
+  let sum, has, tuple, num1, num2
   for (let i = 0; i < nums.length; i++) {
     for (let j = i + 1; j < nums.length; j++) {
-      sum = nums[i] + nums[j]
+      [num1, num2] = [nums[i], nums[j]]
+
+      sum = num1 + num2
 
       if (sum > 0) continue
 
-      counter[nums[i]] -= 1
-      counter[nums[j]] -= 1
+      counter[num1] -= 1
+      counter[num2] -= 1
 
       has = !!counter[sum * -1]
 
-      counter[nums[i]] += 1
-      counter[nums[j]] += 1
+      counter[num1] += 1
+      counter[num2] += 1
 
       // 0 is falsy
       if (!has) continue
 
-      tuple = [nums[i], nums[j], sum * -1]
+      tuple = [num1, num2, sum * -1]
         .sort((a, b) => a - b)
 
       result.add(JSON.stringify(tuple))
