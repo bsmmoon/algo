@@ -37,19 +37,20 @@ var threeSum = function(nums) {
     }
   })
 
-  let sum, has, tuple, num1, num2
+  let target, has, tuple, num1, num2
   for (let i = 0; i < nums.length; i++) {
     for (let j = i + 1; j < nums.length; j++) {
       [num1, num2] = [nums[i], nums[j]]
 
-      sum = num1 + num2
+      target = (num1 + num2) * -1
 
-      if (sum > 0) continue
+      if (target < 0) continue
 
+      // WHY ARE THESE SO EXPENSIVE??
       counter[num1] -= 1
       counter[num2] -= 1
 
-      has = !!counter[sum * -1]
+      has = !!counter[target]
 
       counter[num1] += 1
       counter[num2] += 1
@@ -57,7 +58,7 @@ var threeSum = function(nums) {
       // 0 is falsy
       if (!has) continue
 
-      tuple = [num1, num2, sum * -1]
+      tuple = [num1, num2, target]
         .sort((a, b) => a - b)
 
       result.add(JSON.stringify(tuple))
