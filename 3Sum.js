@@ -32,8 +32,8 @@ var threeSum = function(nums) {
   nums.forEach(e => {
     if (!counter[e]) {
       counter[e] = 1
-    } else {
-      counter[e] += 1
+    } else if (counter[e] === 1) {
+      counter[e] = 2
     }
   })
 
@@ -90,18 +90,21 @@ let tests = [
   }
 ]
 
-let output, result
+const MAX_OUTPUT = 100
+let output, result, timetaken
 
 result = true
 tests.forEach((t) => {
+  timetaken = Date.now()
   output = threeSum(t.input)
+  timetaken = Date.now() - timetaken
 
   result = JSON.stringify(output) === JSON.stringify(t.output)
 
-  console.log(result)
+  console.log(result, timetaken)
 
   if (result) return
 
-  console.log(`input: ${t.input}\noutput: ${JSON.stringify(output)}\nexpected: ${JSON.stringify(t.output)}`)
+  console.log(`input: ${JSON.stringify(t.input).substring(0, MAX_OUTPUT)}\noutput: ${JSON.stringify(output).substring(0, MAX_OUTPUT)}\nexpected: ${JSON.stringify(t.output).substring(0, MAX_OUTPUT)}`)
 })
 
