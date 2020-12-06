@@ -30,6 +30,7 @@ var threeSum = function(nums) {
 
   let counter = {}
   nums.forEach(e => {
+    e = e.toString()
     if (!counter[e]) {
       counter[e] = 1
     } else if (counter[e] === 1) {
@@ -47,13 +48,13 @@ var threeSum = function(nums) {
       if (target < 0) continue
 
       // WHY ARE THESE SO EXPENSIVE??
-      counter[num1] -= 1
-      counter[num2] -= 1
+      counter[num1.toString()] -= 1
+      counter[num2.toString()] -= 1
 
-      has = !!counter[target]
+      has = !!counter[target.toString()]
 
-      counter[num1] += 1
-      counter[num2] += 1
+      counter[num1.toString()] += 1
+      counter[num2.toString()] += 1
 
       // 0 is falsy
       if (!has) continue
