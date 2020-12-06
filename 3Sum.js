@@ -48,18 +48,23 @@ var threeSum = function(nums) {
       if (target < 0) continue
 
       // WHY ARE THESE SO EXPENSIVE??
-      counter[num1.toString()] -= 1
-      counter[num2.toString()] -= 1
 
-      has = !!counter[target.toString()]
+      // WHY DOES IT MAKE IT FASTER????
+      num1 = num1.toString()
+      num2 = num2.toString()
 
-      counter[num1.toString()] += 1
-      counter[num2.toString()] += 1
+      counter[num1] -= 1
+      counter[num2] -= 1
 
-      // 0 is falsy
+      has = !!counter[target]
+
+      counter[num1] += 1
+      counter[num2] += 1
+      
       if (!has) continue
 
       tuple = [num1, num2, target]
+        .map(e => parseInt(e))
         .sort((a, b) => a - b)
 
       result.add(JSON.stringify(tuple))
@@ -98,12 +103,12 @@ let tests = [
 
 const MAX_OUTPUT = 100
 
-const TEST = 3
+const TEST = null
 
 let output, timetaken
 let result = true
 tests.forEach((t, i) => {
-  if (TEST !== i) return
+  if (!!TEST && TEST !== i) return
 
   timetaken = Date.now()
   output = threeSum(t.input)
