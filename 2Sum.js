@@ -2,9 +2,27 @@
  * @param {number[]} nums
  * @param {number} target
  * @return {number[]}
+ *  return """indices""" of the two numbers
+ *
+ * Approach 1.
+ * Create a hash
+ * For each element,
+ *   if target - element is in the hash, return them
+ *   else add (element, indice) to the hash
+ * O(nums) for both time and space
+ *
  */
 var twoSum = function(nums, target) {
-  return [0, 1]
+  let hash = {}
+  let wanted, num
+  const length = nums.length
+  for (let i = 0; i < length; i++) {
+    num = nums[i]
+    wanted = (target - num).toString()
+    if (hash[wanted] !== undefined) return [i, hash[wanted]]
+    hash[num] = i
+  }
+  return []
 }
 
 const tests = [{
@@ -26,7 +44,7 @@ tests.forEach((t, i) => {
   output = twoSum(...t.input)
   timetaken = Date.now() - timetaken
 
-  result = JSON.stringify(output) === JSON.stringify(t.output)
+  result = JSON.stringify(output.sort()) === JSON.stringify(t.output.sort())
 
   console.log(result, timetaken)
 
