@@ -20,23 +20,18 @@
 class Solution(object):
     def removeNthFromEnd(self, head, n):
         fast = head
-        
-        prev = None
-        slow = head
-        
-        while n > 0:
+        for _ in range(n):
             fast = fast.next
-            n -= 1
 
-        if not fast: return slow.next
+        if not fast: return head.next
 
+        slow = head
         while fast:
             fast = fast.next
             if not fast:
                 slow.next = slow.next.next
+                return head
             slow = slow.next
-
-        return head
 
 class ListNode(object):
     def __init__(self, val=0, next=None):
