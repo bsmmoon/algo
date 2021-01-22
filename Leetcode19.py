@@ -28,15 +28,14 @@ class Solution(object):
             fast = fast.next
             n -= 1
 
+        if not fast: return slow.next
+
         while fast:
             fast = fast.next
-            prev = slow
+            if not fast:
+                slow.next = slow.next.next
             slow = slow.next
 
-        if not prev: return slow.next
-        
-        prev.next = slow.next
-        
         return head
 
 class ListNode(object):
@@ -74,4 +73,4 @@ tests = [
 solver = Solution()
 for test in tests:
     output = solver.removeNthFromEnd(build_linked_list(test.input[0]), test.input[1])
-    print(output.to_list() if output else [], test.output)
+    print(test.input, output.to_list() if output else [], test.output)
