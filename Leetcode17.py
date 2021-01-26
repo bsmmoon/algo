@@ -13,10 +13,8 @@
 # O(3^N), space: O(3^N)
 
 class Solution(object):
-    def letterCombinations(self, digits):
-        if len(digits) == 0: return []
-        
-        mapping = {
+    def __init__(self):
+        self.mapping = {
             "2": ["a","b","c"],
             "3": ["d","e","f"],
             "4": ["g","h","i"],
@@ -26,11 +24,15 @@ class Solution(object):
             "8": ["t","u","v"],
             "9": ["w","x","y","z"],
         }
-        combinations = mapping[digits[0]]
+    
+    def letterCombinations(self, digits):
+        if len(digits) == 0: return []
+        
+        combinations = self.mapping[digits[0]]
         for digit in digits[1:]:
             appended = []
             for combination in combinations:
-                for char in mapping[digit]:
+                for char in self.mapping[digit]:
                     appended.append(combination + char)
             combinations = appended
         return combinations
