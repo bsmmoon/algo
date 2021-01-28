@@ -4,7 +4,7 @@
 class Solution(object):
     def climbStairs(self, n):
         prepre, pre = 0, 1
-        for i in range(1, n): prepre, pre = pre, pre + prepre
+        for i in range(1, n): prepre, pre = pre, prepre + pre
         return pre + prepre
     
     def _climbStairs(self, n, memo={}):
