@@ -26,20 +26,18 @@
 #
 # Approach 4.
 # Create an integer
-# Iterate and set ith bit to 1 O(N)
-# Iterate and find the first element that's not True O(N)
+# Iterate and set ith bit to 1 (O(N))
+# Find the first bit that's not 1 (O(N))
 # O(N), space: O(1)
 
 class Solution(object):
     def firstMissingPositive(self, nums):
         bits = 0
         for num in nums:
-            if num <= 0 or 300 < num: continue
+            if not (0 < num <= 300): continue
             bits |= 1 << num
         i = 1
-        while True:
-            if not bits & (1 << i): return i
-            i += 1
+        while bits & (1 << i): i += 1
         return i
 
 def printBits(bits):
