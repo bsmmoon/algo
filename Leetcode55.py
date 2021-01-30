@@ -10,6 +10,8 @@ class Solution(object):
     def canJump(self, nums):
         if len(nums) == 1: return True
         
+        if all(map(lambda x: x != 0, nums)): return True
+        
         last = len(nums) - 1
         left, right = 0, 0
         while left <= right:
