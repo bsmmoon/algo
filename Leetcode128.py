@@ -82,13 +82,6 @@ class Solution(object):
         while num != groups[num]: num = groups[num]
         return num
 
-class Group():
-    def __init__(self, val):
-        self.min = val
-        self.max = val
-    
-    
-
 class Test:
     def __init__(self, input, output):
         self.input = input
