@@ -15,6 +15,28 @@
 #   add a new pair with age of max + 1
 # complexity rises from finding one with max or min O(N)
 
+# Approach 1.1
+# keep oldest and youngest
+# each entry keep next and prev
+# get
+#   connect prev and next
+#   append entry to the end
+#   O(1)
+# push
+#   if not in cache
+#     set oldest's next as oldest and its prev None
+#     del oldest
+#     append entry to the end
+#   if in cache
+#     do same as get plus update value
+#   O(1)
+
+class Entry:
+    def __init__(self, value, age, prev=None, next=None):
+        self.value = value
+        self.age = age
+        self.prev = prev
+        self.next = next
 
 class LRUCache(object):
     def __init__(self, capacity):
@@ -31,12 +53,12 @@ class LRUCache(object):
         :type key: int
         :rtype: int
         """
-        pair = self.cache.get(key)
-        if not pair: return -1
+        entry = self.cache.get(key)
+        if not entry: return -1
         
-        pair[1] = self.nextAge
+        entry.age = self.nextAge
         self.nextAge += 1
-        return pair[0]
+        return entry.value
 
     # O(N)
     def put(self, key, value):
@@ -47,21 +69,21 @@ class LRUCache(object):
         """
         if key not in self.cache and not len(self.cache) < self.capacity:
             self.evict()
-        self.cache[key] = [value, self.nextAge]
+        self.cache[key] = Entry(value, self.nextAge)
         self.nextAge += 1
-        
-    # O(N)
-    def minAge(self):
-        if not self.cache: return 0
-        return min(self.cache.values(), key=lambda x: x[1])[1]
         
     # O(N)
     def evict(self):
         minAge = self.minAge()
         for key in self.cache:
-            if self.cache[key][1] == minAge:
+            if self.cache[key].age == minAge:
                 del self.cache[key]
                 return
+            
+    # O(N)
+    def minAge(self):
+        if not self.cache: return 0
+        return min(self.cache.values(), key=lambda x: x.age).age
 
 # Your LRUCache object will be instantiated and called as such:
 
