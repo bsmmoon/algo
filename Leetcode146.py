@@ -82,7 +82,7 @@ class Test:
             elif command == "put":
                 self.obj.put(*args)
                 output.append(None)
-            print("{} {}\n\t{}".format(command, args, self.obj.cache))
+            # print("{} {}\n\t{}".format(command, args, self.obj.cache))
         return output
 
 tests = [
@@ -90,7 +90,27 @@ tests = [
         ["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"],
         [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]],
         [None, None, None, 1, None, -1, None, -1, 3, 4]
-    )
+    ),
+    Test(
+        ["LRUCache", "put", "get", "get"],
+        [[2], [1, 1], [1], [2]],
+        [None, None, 1, -1]
+    ),
+    Test(
+        ["LRUCache", "put", "put", "put", "get", "get", "get"],
+        [[2], [1, 1], [2, 2], [3, 3], [1], [2], [3]],
+        [None, None, None, None, -1, 2, 3]
+    ),
+    Test(
+        ["LRUCache", "put", "put", "get", "put", "get", "get", "get"],
+        [[2], [1, 1], [2, 2], [1], [3, 3], [1], [2], [3]],
+        [None, None, None, 1, None, 1, -1, 3]
+    ),
+    Test(
+        ["LRUCache", "put", "put", "put", "put", "get", "get", "get"],
+        [[2], [1, 1], [2, 2], [1, 11], [3, 3], [1], [2], [3]],
+        [None, None, None, None, None, 11, -1, 3]
+    ),
 ]
 
 for test in tests:
