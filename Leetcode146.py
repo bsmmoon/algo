@@ -79,18 +79,15 @@ class LRUCache(object):
             self.remove_entry(entry)
             self.append(entry)
         else:
-            if self.is_full(): self.evict()
+            if self.capacity > 0:
+                self.capacity -= 1
+            else:
+                self.cache.pop(self.head.key)
+                self.remove_entry(self.head)
             
             entry = Entry(key, value)
             self.cache[key] = entry
             self.append(entry)
-
-    def is_full(self):
-        return len(self.cache) >= self.capacity
-        
-    def evict(self):
-        del self.cache[self.head.key]
-        self.remove_entry(self.head)
         
     def remove_entry(self, entry):
         if entry.prev and entry.next:
