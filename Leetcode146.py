@@ -133,6 +133,11 @@ tests = [
         [[2], [1, 1], [2, 2], [1, 11], [3, 3], [1], [2], [3]],
         [None, None, None, None, None, 11, -1, 3]
     ),
+    Test(
+        ["LRUCache", "put", "get", "put", "put", "get", "get"],
+        [[1], [1, 1], [1], [2, 2], [3, 3], [2], [3]],
+        [None, None, 1, None, None, -1, 3]
+    )
 ]
 
 for test in tests:
