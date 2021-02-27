@@ -32,58 +32,83 @@
 #   O(1)
 
 class Entry:
-    def __init__(self, value, age, prev=None, next=None):
+    def __init__(self, key, value, prev=None, next=None):
+        self.key = key
         self.value = value
-        self.age = age
         self.prev = prev
         self.next = next
+        
+    def __repr__(self):
+        return "{}, {}".format(self.key, self.value)
+        
+    def values(self):
+        arr = []
+        entry = self
+        while entry:
+            arr.append(entry.value)
+            entry = entry.next
+        return arr
 
 class LRUCache(object):
     def __init__(self, capacity):
-        """
-        :type capacity: int
-        """
         self.capacity = capacity
         self.cache = {}
-        self.nextAge = 0
-
+        self.head, self.tail = None, None
+    
     # O(1)
     def get(self, key):
-        """
-        :type key: int
-        :rtype: int
-        """
         entry = self.cache.get(key)
+        
         if not entry: return -1
         
-        entry.age = self.nextAge
-        self.nextAge += 1
+        # remove the entry
+        self.remove_entry(entry)
+        
+        # append the entry to the end
+        self.append(entry)
+
         return entry.value
 
-    # O(N)
+    # O(1)
     def put(self, key, value):
-        """
-        :type key: int
-        :type value: int
-        :rtype: None
-        """
-        if key not in self.cache and not len(self.cache) < self.capacity:
-            self.evict()
-        self.cache[key] = Entry(value, self.nextAge)
-        self.nextAge += 1
+        if key in self.cache:
+            self.remove_entry(self.cache.get(key))
+        elif self.is_full():
+            self.remove_entry(self.head)
         
-    # O(N)
-    def evict(self):
-        minAge = self.minAge()
-        for key in self.cache:
-            if self.cache[key].age == minAge:
-                del self.cache[key]
-                return
+        # append the entry to the end
+        self.append(Entry(key, value))
+
+    def is_full(self):
+        return not len(self.cache) < self.capacity
+        
+    def remove_entry(self, entry):
+        if entry.prev and entry.next:
+            entry.prev.next = entry.next
+            entry.next.prev = entry.prev
+        
+        if entry == self.head:  # entry is head
+            self.head = entry.next
+            if self.head: self.head.prev = None
+        
+        if entry == self.tail:
+            self.tail = entry.prev
+            if self.tail: self.tail.next = None
             
-    # O(N)
-    def minAge(self):
-        if not self.cache: return 0
-        return min(self.cache.values(), key=lambda x: x.age).age
+        del self.cache[entry.key]
+
+    def append(self, entry):
+        if self.tail == entry: return
+    
+        if self.tail:
+            self.tail.next = entry
+            
+        entry.prev, entry.next = self.tail, None
+        
+        self.tail = entry
+        if not self.head: self.head = entry
+        
+        self.cache[entry.key] = entry
 
 # Your LRUCache object will be instantiated and called as such:
 
@@ -104,7 +129,7 @@ class Test:
             elif command == "put":
                 self.obj.put(*args)
                 output.append(None)
-            # print("{} {}\n\t{}".format(command, args, self.obj.cache))
+            # print("{} {}\n\t{}".format(command, args, self.obj.head.values() if self.obj.head else None))
         return output
 
 tests = [
