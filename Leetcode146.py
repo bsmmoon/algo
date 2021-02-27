@@ -54,17 +54,16 @@ class LRUCache(object):
         self.capacity = capacity
         self.cache = {}
         self.head, self.tail = None, None
-    
+
     # O(1)
     def get(self, key):
         entry = self.cache.get(key)
         
         if not entry: return -1
         
-        # remove the entry
-        self.remove_entry(entry)
+        if entry == self.tail: return entry.value
         
-        # append the entry to the end
+        self.remove_entry(entry)
         self.append(entry)
 
         return entry.value
@@ -72,22 +71,32 @@ class LRUCache(object):
     # O(1)
     def put(self, key, value):
         if key in self.cache:
-            self.remove_entry(self.cache.get(key))
-        elif self.is_full():
-            self.remove_entry(self.head)
-        
-        # append the entry to the end
-        self.append(Entry(key, value))
+            entry = self.cache.get(key)
+            entry.value = value
+
+            if entry == self.tail: return
+            
+            self.remove_entry(entry)
+            self.append(entry)
+        else:
+            if self.is_full(): self.evict()
+            
+            entry = Entry(key, value)
+            self.cache[key] = entry
+            self.append(entry)
 
     def is_full(self):
-        return not len(self.cache) < self.capacity
+        return len(self.cache) >= self.capacity
+        
+    def evict(self):
+        del self.cache[self.head.key]
+        self.remove_entry(self.head)
         
     def remove_entry(self, entry):
         if entry.prev and entry.next:
-            entry.prev.next = entry.next
-            entry.next.prev = entry.prev
+            entry.next.prev, entry.prev.next = entry.prev, entry.next
         
-        if entry == self.head:  # entry is head
+        if entry == self.head:
             self.head = entry.next
             if self.head: self.head.prev = None
         
@@ -95,20 +104,15 @@ class LRUCache(object):
             self.tail = entry.prev
             if self.tail: self.tail.next = None
             
-        del self.cache[entry.key]
-
     def append(self, entry):
         if self.tail == entry: return
     
-        if self.tail:
-            self.tail.next = entry
-            
+        if self.tail: self.tail.next = entry
+        
         entry.prev, entry.next = self.tail, None
         
         self.tail = entry
         if not self.head: self.head = entry
-        
-        self.cache[entry.key] = entry
 
 # Your LRUCache object will be instantiated and called as such:
 
@@ -159,9 +163,9 @@ tests = [
         [None, None, None, None, None, 11, -1, 3]
     ),
     Test(
-        ["LRUCache", "put", "get", "put", "put", "get", "get"],
-        [[1], [1, 1], [1], [2, 2], [3, 3], [2], [3]],
-        [None, None, 1, None, None, -1, 3]
+        ["LRUCache", "get", "put", "get", "put", "put", "get", "get"],
+        [[1], [0], [1, 1], [1], [2, 2], [3, 3], [2], [3]],
+        [None, -1, None, 1, None, None, -1, 3]
     )
 ]
 
